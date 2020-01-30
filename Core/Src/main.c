@@ -101,11 +101,10 @@ int main(void)
   HAL_UART_Transmit(&huart2, (uint8_t *)WELCOME_MSG, strlen(WELCOME_MSG), HAL_MAX_DELAY);
 
   // init globals
-//  glob_state = 1;
-//  SS_Commutate_Type5(glob_state);
+  glob_state = 1;
+  SS_Commutate_Type5(glob_state);
 
   // start timers
-//  HAL_TIM_Base_Start_IT(&htim6);
   HAL_TIM_Base_Start_IT(&htim7);
 
   /* USER CODE END 2 */
@@ -114,13 +113,14 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-#define SIMPLE_TEST
+
 
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+//#define SIMPLE_TEST
 #ifdef SIMPLE_TEST
 	  for(uint8_t n = 0; n < 3; n++)
 	  {
