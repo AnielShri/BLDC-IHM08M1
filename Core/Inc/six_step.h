@@ -17,13 +17,9 @@
 // -- public functions
 // ---------------------------------------------------------------------------+
 void SS_Init();
+void SS_Set_Duty_Ratio(uint32_t new_duty);
 void SS_Commutate_Type1(uint8_t state);
-void SS_Commutate_Type3(uint8_t state);
-void SS_Commutate_Type4(uint8_t state);
-void SS_Commutate_Type5(uint8_t state);
-void SS_Commutate_Type6(uint8_t state);
-
-
+void SS_Commutate_Type2(uint8_t state);
 
 
 #endif /* INC_SIX_STEP_H_ */

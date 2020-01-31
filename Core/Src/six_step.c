@@ -9,188 +9,116 @@
 // ---------------------------------------------------------------------------+
 // -- includes
 // ---------------------------------------------------------------------------+
+
 #include "main.h"
+#include "six_step.h"
+#include "tim.h"
+
+// ---------------------------------------------------------------------------+
+// -- private variables
+// ---------------------------------------------------------------------------+
+uint32_t _pwm_value;
 
 // ---------------------------------------------------------------------------+
 // -- SS_Init
 // ---------------------------------------------------------------------------+
 void SS_Init()
 {
+	_pwm_value = 0;
+	SS_Commutate_Type2(0); // disable all switches
+}
+
+// ---------------------------------------------------------------------------+
+// -- SS_Set_Duty_Ratio
+// ---------------------------------------------------------------------------+
+void SS_Set_Duty_Ratio(uint32_t new_duty)
+{
+	if(new_duty < TIM1->ARR)
+	{
+		_pwm_value = new_duty;
+	}
+	else
+	{
+		_pwm_value = TIM1->ARR;
+	}
 
 }
 
 // ---------------------------------------------------------------------------+
-// -- SS_Commutate GPIO
+// -- SS_Commutate GPIOs
 // ---------------------------------------------------------------------------+
 void SS_Commutate_Type1(uint8_t state)
 {
 	uint8_t commutation_table[8][6] =
 	{
 			{	0,	0,	0,	0,	0,	0	},
-			{	1,	0,	0,	1,	0,	0	},
-			{	1,	0,	0,	0,	0,	1	},
-			{	0,	0,	1,	0,	0,	1	},
-			{	0,	1,	1,	0,	0,	0	},
-			{	0,	1,	0,	0,	1,	0	},
-			{	0,	0,	0,	1,	1,	0	},
-			{	0,	0,	0,	0,	0,	0	},
-	};
-
-	uint16_t gpio_pins[] = {
-			S1_H_Pin, S1_L_Pin, S2_H_Pin, S2_L_Pin, S3_H_Pin, S3_L_Pin
-	};
-
-	GPIO_TypeDef *gpio_ports[] = {
-			S1_H_GPIO_Port, S1_L_GPIO_Port, S2_H_GPIO_Port, S2_L_GPIO_Port, S3_H_GPIO_Port, S3_L_GPIO_Port
-	};
-
-	for(uint8_t n=0; n<6; n++)
-	{
-		HAL_GPIO_WritePin(gpio_ports[n], gpio_pins[n], commutation_table[state][n]);
-	}
-}
-
-// ---------------------------------------------------------------------------+
-// -- SS_Commutate
-// ---------------------------------------------------------------------------+
-void SS_Commutate_type2(uint8_t state)
-{
-	uint32_t pwm = 2500;
-	uint32_t max = 6500;
-
-	uint8_t commutation_table[8][6] =
-	{
-			{	pwm,	0,		0,		max,	0,		0	},
-			{	pwm,	0,		0,		0,		0,		max	},
-			{	0,		0,		pwm,	0,		0,		max	},
-			{	0,		max,	pwm,	0,		0,		0	},
-			{	0,		max,	0,		0,		pwm,	0	},
-			{	0,		0,		0,		max,	pwm,	0	},
-	};
-}
-
-// ---------------------------------------------------------------------------+
-// -- SS_Commutate -> Driver tests
-// ---------------------------------------------------------------------------+
-void SS_Commutate_Type3(uint8_t state)
-{
-
-	uint8_t commutation_table[][6] =
-	{
-			{	0,	1,	0,	1,	0,	1	},
-			{	1,	0,	1,	0,	1,	0	},
-	};
-
-	uint16_t gpio_pins[] = {
-			S1_H_Pin, S1_L_Pin, S2_H_Pin, S2_L_Pin, S3_H_Pin, S3_L_Pin
-	};
-
-	GPIO_TypeDef *gpio_ports[] = {
-			S1_H_GPIO_Port, S1_L_GPIO_Port, S2_H_GPIO_Port, S2_L_GPIO_Port, S3_H_GPIO_Port, S3_L_GPIO_Port
-	};
-
-	uint8_t sel = state % 2;
-
-	for(uint8_t n=0; n<6; n++)
-	{
-		HAL_GPIO_WritePin(gpio_ports[n], gpio_pins[n], commutation_table[sel][n]);
-	}
-}
-
-
-// ---------------------------------------------------------------------------+
-// -- SS_Commutate -> Driver tests
-// ---------------------------------------------------------------------------+
-void SS_Commutate_Type4(uint8_t state)
-{
-
-	uint8_t commutation_table[][6] =
-	{
-			{	0,	0,	0,	0,	0,	0	},	// 0
-			{	1,	0,	0,	1,	0,	0	},	// 1
-			{	0,	0,	1,	0,	0,	1	},	// 2
-			{	0,	1,	0,	0,	1,	0	},	// 3
-			{	1,	0,	0,	0,	0,	1	},	// 4
-			{	0,	1,	1,	0,	0,	0	},	// 5
-			{	0,	0,	0,	1,	1,	0	},	// 6
-			{	0,	0,	0,	0,	0,	0	},	// 7
-	};
-
-	uint16_t gpio_pins[] = {
-			S1_H_Pin, S1_L_Pin, S2_H_Pin, S2_L_Pin, S3_H_Pin, S3_L_Pin
-	};
-
-	GPIO_TypeDef *gpio_ports[] = {
-			S1_H_GPIO_Port, S1_L_GPIO_Port, S2_H_GPIO_Port, S2_L_GPIO_Port, S3_H_GPIO_Port, S3_L_GPIO_Port
-	};
-
-//	uint8_t sel = state % 2;
-
-	for(uint8_t n=0; n<6; n++)
-	{
-		HAL_GPIO_WritePin(gpio_ports[n], gpio_pins[n], commutation_table[state][n]);
-	}
-}
-
-
-// ---------------------------------------------------------------------------+
-// -- SS_Commutate -> Driver tests
-// ---------------------------------------------------------------------------+
-void SS_Commutate_Type5(uint8_t state)
-{
-
-	uint8_t commutation_table[][6] =
-	{
-			{	0,	0,	1,	0,	0,	1	},	// 0
-			{	0,	0,	1,	0,	0,	1	},	// 1
-			{	0,	0,	1,	0,	0,	1	},	// 2
-			{	0,	0,	1,	0,	0,	1	},	// 3
-			{	0,	0,	1,	0,	0,	1	},	// 4
-			{	0,	0,	1,	0,	0,	1	},	// 5
-			{	0,	0,	1,	0,	0,	1	},	// 6
-			{	0,	0,	1,	0,	0,	1	},	// 7
-	};
-
-	uint16_t gpio_pins[] = {
-			S1_H_Pin, S1_L_Pin, S2_H_Pin, S2_L_Pin, S3_H_Pin, S3_L_Pin
-	};
-
-	GPIO_TypeDef *gpio_ports[] = {
-			S1_H_GPIO_Port, S1_L_GPIO_Port, S2_H_GPIO_Port, S2_L_GPIO_Port, S3_H_GPIO_Port, S3_L_GPIO_Port
-	};
-
-	uint8_t sel = 1;
-
-	for(uint8_t n=0; n<6; n++)
-	{
-		HAL_GPIO_WritePin(gpio_ports[n], gpio_pins[n], commutation_table[sel][n]);
-	}
-}
-
-// ---------------------------------------------------------------------------+
-// -- SS_Commutate GPIO
-// ---------------------------------------------------------------------------+
-void SS_Commutate_Type6(uint8_t state)
-{
-	uint8_t commutation_table[8][6] =
-	{
-			{	0,	0,	0,	0,	0,	0	},
-			{	0,	0,	0,	0,	1,	0	},
-			{	0,	1,	1,	0,	0,	0	},
+			{	1,	1,	0,	0,	1,	0	},
+			{	1,	1,	1,	0,	0,	0	},
 			{	1,	0,	1,	1,	0,	0	},
-			{	1,	1,	1,	1,	1,	0	},
+			{	0,	0,	1,	1,	1,	0	},
 			{	0,	0,	1,	0,	1,	1	},
-			{	0,	0,	0,	0,	1,	1	},
+			{	1,	0,	0,	0,	1,	1	},
 			{	0,	0,	0,	0,	0,	0	},
 	};
 
-//	HAL_GPIO_WritePin(S1_H_GPIO_Port, S1_H_Pin, GPIO_PIN_RESET);
-//	HAL_GPIO_WritePin(S1_L_GPIO_Port, S1_L_Pin, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(S2_H_GPIO_Port, S2_H_Pin, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(S2_L_GPIO_Port, S2_L_Pin, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(S3_H_GPIO_Port, S3_H_Pin, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(S3_L_GPIO_Port, S3_L_Pin, GPIO_PIN_RESET);
+	uint16_t gpio_pins[] = {
+			S1_H_Pin, S1_L_Pin, S2_H_Pin, S2_L_Pin, S3_H_Pin, S3_L_Pin
+	};
 
-	HAL_GPIO_WritePin(S1_H_GPIO_Port, S1_H_Pin, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(S1_L_GPIO_Port, S1_L_Pin, GPIO_PIN_SET);
+	GPIO_TypeDef *gpio_ports[] = {
+			S1_H_GPIO_Port, S1_L_GPIO_Port, S2_H_GPIO_Port, S2_L_GPIO_Port, S3_H_GPIO_Port, S3_L_GPIO_Port
+	};
+
+	for(uint8_t n=0; n<6; n++)
+	{
+		HAL_GPIO_WritePin(gpio_ports[n], gpio_pins[n], commutation_table[state][n]);
+	}
+}
+
+// ---------------------------------------------------------------------------+
+// -- SS_Commutate PWM
+// ---------------------------------------------------------------------------+
+void SS_Commutate_Type2(uint8_t state)
+{
+
+	GPIO_PinState low = GPIO_PIN_RESET;
+	GPIO_PinState high = GPIO_PIN_SET;
+	uint32_t pwm = _pwm_value;
+
+	uint32_t commutation_table[8][6] =
+	{
+			{	0,		high,	0,		high,	0,		high	},
+			{	pwm,	high,	0,		low,	0,		high	},
+			{	pwm,	high,	0,		high,	0,		low		},
+			{	0,		high,	pwm,	high,	0,		low		},
+			{	0,		low,	pwm,	high,	0,		high	},
+			{	0,		low,	0,		high,	pwm,	high	},
+			{	0,		high,	0,		low,	pwm,	high	},
+			{	0,		high,	0,		high,	0,		high	},
+	};
+
+	uint16_t gpio_pins[] = {
+			S1_L_Pin, S2_L_Pin, S3_L_Pin,
+	};
+
+	GPIO_TypeDef *gpio_ports[] = {
+			S1_L_GPIO_Port, S2_L_GPIO_Port, S3_L_GPIO_Port,
+	};
+
+	uint32_t tim_channels[] = {
+			TIM_CHANNEL_1, TIM_CHANNEL_2, TIM_CHANNEL_3,
+	};
+
+	// toggle low switches first
+	for(uint8_t n = 0; n < 3; n++)
+	{
+		HAL_GPIO_WritePin(gpio_ports[n], gpio_pins[n], commutation_table[state][n*2+1]);
+	}
+
+	// adjust PWM
+	for(uint8_t n = 0; n < 3; n++)
+	{
+		__HAL_TIM_SET_COMPARE(&htim1, tim_channels[n], commutation_table[state][n*2]);
+	}
+
 }

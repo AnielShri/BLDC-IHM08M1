@@ -28,6 +28,7 @@
 #include "debug.h"
 #include "globals.h"
 #include "six_step.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -243,16 +244,16 @@ void TIM7_IRQHandler(void)
   HAL_TIM_IRQHandler(&htim7);
   /* USER CODE BEGIN TIM7_IRQn 1 */
 
-	HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 
-//	glob_state += 1;
-//	if(glob_state == 5)
-//	{
-//		glob_state = 1;
-//	}
-//
-//	debug_printf("Global State: %d\r\n", glob_state);
-//	SS_Commutate_Type6(glob_state);
+  glob_state += 1;
+  if(glob_state == 7)
+  {
+	  glob_state = 1;
+  }
+  SS_Commutate_Type2(glob_state);
+
+
+	HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 
   /* USER CODE END TIM7_IRQn 1 */
 }
@@ -268,16 +269,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t gpio_pin)
 		{
 			HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 			break;
-
-
 		}
 		case B1_Pin:
 		{
-//			glob_state += 1;
-//			if(glob_state == 7)glob_state = 1;
-//			debug_printf("Global State: %d\r\n", glob_state);
-//			SS_Commutate_Type3(glob_state);
-
 			break;
 		}
 		default:

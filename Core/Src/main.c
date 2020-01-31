@@ -94,19 +94,30 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART2_UART_Init();
+  MX_TIM1_Init();
   MX_TIM7_Init();
   /* USER CODE BEGIN 2 */
 
   // welcome message
   HAL_UART_Transmit(&huart2, (uint8_t *)WELCOME_MSG, strlen(WELCOME_MSG), HAL_MAX_DELAY);
 
-  // init globals
-//  glob_state = 1;
-//  SS_Commutate_Type5(glob_state);
+  // Init stuff here
+  glob_state = 1;
+  SS_Init();
 
   // start timers
-//  HAL_TIM_Base_Start_IT(&htim6);
   HAL_TIM_Base_Start_IT(&htim7);
+
+  // start PWM timers
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
+
+//  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 10e3);
+//  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, 10e3);
+//  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_3, 10e3);
+
+  SS_Set_Duty_Ratio(10e3);
 
   /* USER CODE END 2 */
  
@@ -114,46 +125,13 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-#define SIMPLE_TEST
+
 
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-#ifdef SIMPLE_TEST
-	  for(uint8_t n = 0; n < 3; n++)
-	  {
-		  // reset all
-		  HAL_GPIO_WritePin(S1_H_GPIO_Port, S1_H_Pin, GPIO_PIN_RESET);
-		  HAL_GPIO_WritePin(S1_L_GPIO_Port, S1_L_Pin, GPIO_PIN_RESET);
-		  HAL_GPIO_WritePin(S2_H_GPIO_Port, S2_H_Pin, GPIO_PIN_RESET);
-		  HAL_GPIO_WritePin(S2_L_GPIO_Port, S2_L_Pin, GPIO_PIN_RESET);
-		  HAL_GPIO_WritePin(S3_H_GPIO_Port, S3_H_Pin, GPIO_PIN_RESET);
-		  HAL_GPIO_WritePin(S3_L_GPIO_Port, S3_L_Pin, GPIO_PIN_RESET);
-
-		  // then set according to index
-		  switch (n)
-		  {
-			case 0:
-				HAL_GPIO_WritePin(S1_H_GPIO_Port, S1_H_Pin, GPIO_PIN_SET);
-				HAL_GPIO_WritePin(S1_L_GPIO_Port, S1_L_Pin, GPIO_PIN_SET);
-				break;
-			case 1:
-				HAL_GPIO_WritePin(S2_H_GPIO_Port, S2_H_Pin, GPIO_PIN_SET);
-				HAL_GPIO_WritePin(S2_L_GPIO_Port, S2_L_Pin, GPIO_PIN_SET);
-				break;
-			case 2:
-				HAL_GPIO_WritePin(S3_H_GPIO_Port, S3_H_Pin, GPIO_PIN_SET);
-				HAL_GPIO_WritePin(S3_L_GPIO_Port, S3_L_Pin, GPIO_PIN_SET);
-				break;
-			default:
-				break;
-		  }
-
-		  HAL_Delay(1);
-	  }
-#endif
 
   }
   /* USER CODE END 3 */
