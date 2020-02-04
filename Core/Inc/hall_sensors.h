@@ -9,7 +9,8 @@
 #define INC_HALL_SENSORS_H_
 
 
-
+void HS_Init();
+uint8_t HS_Calculate_State();
 
 
 #endif /* INC_HALL_SENSORS_H_ */

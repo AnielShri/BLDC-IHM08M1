@@ -28,6 +28,7 @@
 #include "debug.h"
 #include "globals.h"
 #include "six_step.h"
+#include "hall_sensors.h"
 
 /* USER CODE END Includes */
 
@@ -245,15 +246,15 @@ void TIM7_IRQHandler(void)
   /* USER CODE BEGIN TIM7_IRQn 1 */
 
 
-  glob_state += 1;
-  if(glob_state == 7)
-  {
-	  glob_state = 1;
-  }
-  SS_Commutate_Type2(glob_state);
-
-
-	HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+//  glob_state += 1;
+//  if(glob_state == 7)
+//  {
+//	  glob_state = 1;
+//  }
+//  SS_Commutate_Type2(glob_state);
+//
+//
+//	HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 
   /* USER CODE END TIM7_IRQn 1 */
 }
@@ -268,6 +269,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t gpio_pin)
 		case HALL3_GPIO_PIN:
 		{
 			HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+			uint32_t state = HS_Calculate_State();
+			SS_Commutate_Type3(state);
+
 			break;
 		}
 		case B1_Pin:
