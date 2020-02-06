@@ -46,9 +46,9 @@ uint8_t HS_Calculate_State()
 	};
 
 	// read current HALL values
-	uint8_t val_H1 = HAL_GPIO_ReadPin(S1_L_GPIO_Port, S1_L_Pin);
-	uint8_t val_H2 = HAL_GPIO_ReadPin(S2_L_GPIO_Port, S2_L_Pin);
-	uint8_t val_H3 = HAL_GPIO_ReadPin(S3_L_GPIO_Port, S3_L_Pin);
+	uint8_t val_H1 = HAL_GPIO_ReadPin(H1_GPIO_Port, H1_Pin);
+	uint8_t val_H2 = HAL_GPIO_ReadPin(H2_GPIO_Port, H2_Pin);
+	uint8_t val_H3 = HAL_GPIO_ReadPin(H3_GPIO_Port, H3_Pin);
 
 	// compound values
 	uint8_t total_val = (val_H3 << 2) | (val_H2 << 1) | (val_H1  << 0);

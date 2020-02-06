@@ -264,9 +264,9 @@ void TIM7_IRQHandler(void)
 void HAL_GPIO_EXTI_Callback(uint16_t gpio_pin)
 {
 	switch (gpio_pin) {
-		case HALL1_GPIO_PIN:
-		case HALL2_GPIO_PIN:
-		case HALL3_GPIO_PIN:
+		case H1_Pin:
+		case H2_Pin:
+		case H3_Pin:
 		{
 			HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 			uint32_t state = HS_Calculate_State();
